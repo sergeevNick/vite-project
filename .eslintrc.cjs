@@ -14,5 +14,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    "comma-dangle": ["error", "never"],
+    "semi": ["error", "always"]
   },
 }

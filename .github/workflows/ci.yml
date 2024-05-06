@@ -21,12 +21,33 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
+  checks:
+    name: CI checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Stylelint
+        run: npm run stylelint --if-present
+      - name: Prettier
+        run: npm run prettier --if-present
+      - name: TSC
+        run: npm run tsc --if-present
   deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    needs: checks
     steps:
       - name: Checkout
         uses: actions/checkout@v4
